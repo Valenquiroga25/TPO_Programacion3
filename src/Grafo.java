@@ -4,7 +4,6 @@
 import java.util.*;
 
 public class Grafo {
-
     private int distancias[]; // Arreglo que almacena distancia más cortas entre vértice de origen a cada uno de los demás vértices
     private Set<Integer> visitados; // Arreglo de vértices visitados.
     private PriorityQueue<Nodo> colaPrioridad; // Cola de prioridad para ver posibles nodos que nos den un costo menor.
@@ -15,13 +14,13 @@ public class Grafo {
     public Grafo(int V) {
         this.V = V;
         distancias = new int[V];
-        visitados = new HashSet<Integer>();
-        colaPrioridad = new PriorityQueue<Nodo>(V, new Nodo());
     }
 
     // Algoritmo Dijkstra
     public void dijkstra(List<List<Nodo>> adj, int origen) { // Se le pasa la lista de adyacentes de cada nodo del grafo y el nodo de origen.
         this.adj = adj;
+        colaPrioridad = new PriorityQueue<Nodo>(V, new Nodo()); // Se crea la instancia dentro del Dijkstra para que no se trabaje con la lista del primer nodo (sino los costos del primer cliente dan bien pero a partir del segundo no).
+        visitados = new HashSet<Integer>(); // Se crea la instancia dentro del Dijkstra para que no se trabaje con la lista del primer nodo (sino los costos del primer cliente dan bien pero a partir del segundo no).
 
         for (int i = 0; i < V; i++)
             distancias[i] = Integer.MAX_VALUE; // Se inicializa un arreglo con distancias iniciales infinitas para todos los nodos.
