@@ -31,8 +31,8 @@ public class CO implements Comparable<CO> {
                     if(x.get(i)==-1)
                         break;
                     else{
-                        if(costosMinimos.get(j) > mapa.get(i).get(j).costo)
-                            costosMinimos.set(j,mapa.get(i).get(j).costo);
+                        if(costosMinimos.get(j) > mapa.get(i).get(j).getCosto())
+                            costosMinimos.set(j,mapa.get(i).get(j).getCosto());
                     }
                 }
                 i++;
@@ -46,8 +46,8 @@ public class CO implements Comparable<CO> {
     private void setCostosMinimosPosibles(){
         for (int i = 0; i < mapa.size() ; i++) {
             for (int j = 0; j < mapa.get(i).size(); j++) {
-                if(costoMinimosPosibles.get(j) > mapa.get(i).get(j).costo)
-                    costoMinimosPosibles.set(j,mapa.get(i).get(j).costo);
+                if(costoMinimosPosibles.get(j) > mapa.get(i).get(j).getCosto())
+                    costoMinimosPosibles.set(j, mapa.get(i).get(j).getCosto());
             }
         }
         this.c = 0;
@@ -58,14 +58,14 @@ public class CO implements Comparable<CO> {
     private void setReduccionMinima() {
         this.reduccionMinima = 0;
         for (int i = 0; i < mapa.get(i).size(); i++) {
-            if (costosMinimos.get(i) == mapa.get(centroAContruir).get(i).costo) {
+            if (costosMinimos.get(i) == mapa.get(centroAContruir).get(i).getCosto()) {
                 int segundoMinimo = Integer.MAX_VALUE;
                 for (int j = 0; j < mapa.size(); j++) {
-                    if (j != centroAContruir && segundoMinimo > mapa.get(j).get(i).costo && x.get(j)!=-1) {
-                        segundoMinimo = mapa.get(j).get(i).costo;
+                    if (j != centroAContruir && segundoMinimo > mapa.get(j).get(i).getCosto() && x.get(j)!=-1) {
+                        segundoMinimo = mapa.get(j).get(i).getCosto();
                     }
                 }
-                this.reduccionMinima += segundoMinimo - mapa.get(centroAContruir).get(i).costo;
+                this.reduccionMinima += segundoMinimo - mapa.get(centroAContruir).get(i).getCosto();
             }
         }
     }
@@ -73,22 +73,22 @@ public class CO implements Comparable<CO> {
     private void setReduccionMaxima(){
         this.reduccionMaxima = 0;
         for (int i = 0; i < mapa.get(i).size(); i++) {
-            if (costosMinimos.get(i) == mapa.get(centroAContruir).get(i).costo){
+            if (costosMinimos.get(i) == mapa.get(centroAContruir).get(i).getCosto()){
                 int maximo = 0;
                 if(centroAContruir==0) {
                     for (int j = 0; j < mapa.size(); j++) {
-                        if (j != centroAContruir && maximo > mapa.get(j).get(i).costo && x.get(j)!=-1) {
-                            maximo = mapa.get(j).get(i).costo;
+                        if (j != centroAContruir && maximo > mapa.get(j).get(i).getCosto() && x.get(j)!=-1) {
+                            maximo = mapa.get(j).get(i).getCosto();
                         }
                     }
-                    this.reduccionMaxima += maximo - mapa.get(centroAContruir).get(i).costo;
+                    this.reduccionMaxima += maximo - mapa.get(centroAContruir).get(i).getCosto();
                 }else{
                     for (int j = 0; j < centroAContruir-1; j++) {
-                        if (maximo > mapa.get(j).get(i).costo && x.get(j)!=-1) {
-                            maximo = mapa.get(j).get(i).costo;
+                        if (maximo > mapa.get(j).get(i).getCosto() && x.get(j)!=-1) {
+                            maximo = mapa.get(j).get(i).getCosto();
                         }
                     }
-                    this.reduccionMaxima += maximo - mapa.get(centroAContruir).get(i).costo;
+                    this.reduccionMaxima += maximo - mapa.get(centroAContruir).get(i).getCosto();
                 }
             }
         }

@@ -1,7 +1,27 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Main {
+    public static List<Integer> construirCentros(List<List<Nodo>> mapa){
+        PriorityQueue<CO> cola = new PriorityQueue<>();
+        List<Integer> x = new ArrayList<>();
+        List<Integer> costosClientes  = new ArrayList<>();
+
+        for (int i = 0; i < mapa.size(); i++) {
+            x.add(0);
+        }
+
+        CO base = new CO(x,mapa,0);
+        CO centro;
+        cola.add(base);
+
+        while(!cola.isEmpty()){
+            centro = cola.poll();
+
+        }
+        return null;
+    }
     public static void main(String[] args){
         int V = 58;
         List<List<Integer>> caminosACentros = new ArrayList<>(); // Lista que guarda los Dijkstra de cada cliente.
