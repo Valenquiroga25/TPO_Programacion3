@@ -22,6 +22,7 @@ public class Main {
         }
         return null;
     }
+
     public static void main(String[] args){
         int V = 58;
         List<List<Integer>> caminosACentros = new ArrayList<>(); // Lista que guarda los Dijkstra de cada cliente.
@@ -30,15 +31,17 @@ public class Main {
         List<List<Nodo>> conexiones = grafo.establecerConexiones(V); // Lista que establece las conexiones entre nodos.
 
         for (int i=50; i < 58; i++){
-            System.out.println("\nCamino más corto al centro " + i + " cara cada cliente: ");
-            grafo.dijkstra(conexiones, i);
+            //System.out.println("\nCamino más corto al centro " + i + " cara cada cliente: ");
+
+            grafo.dijkstra(conexiones, i); // Acá es donde se hace el Dikstra con cada cliente a cada centro. Lo que hace que cambien los valores de la lista 'distancias'.
+
             List<Integer> caminosPorCliente = new ArrayList<>(49); // Inicializamos la lista que guarda los Dijkstra de un cliente solo.
 
             for (int j = 0; j <= 49; j++) {
                 caminosPorCliente.add(grafo.getDistancias()[j]); // Le asignamos los valores a la lista previmente creada.
-                System.out.println("Costo para cliente " + j + " es: " + grafo.getDistancias()[j]);
+                //System.out.println("Costo para cliente " + j + " es: " + grafo.getDistancias()[j]);
             }
-            System.out.println();
+            //System.out.println();
             caminosACentros.add(caminosPorCliente); // Se agrega a la lista de listas.
         }
 
@@ -52,6 +55,7 @@ public class Main {
         List<Integer> costosOperacion = grafo.costosDeOperacion();
 
         // En esta impresión cada fila es el centro y cada columna el cliente que llega.
+        System.out.println();
         for(int i=0; i < caminosACentros.size(); i++) {
             for (int j = 0; j < caminosACentros.get(0).size(); j++){
                 System.out.print(caminosACentros.get(i).get(j) + " ");

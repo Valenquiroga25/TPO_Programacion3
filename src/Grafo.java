@@ -25,8 +25,9 @@ public class Grafo {
 
         for (int i = 0; i < V; i++)
             distancias[i] = Integer.MAX_VALUE; // Se inicializa un arreglo con distancias iniciales infinitas para todos los nodos.
+        // Esto se hace ya que al principio no se ha explorado ninguna ruta y no se conoce la longitud mínima de ninguna ruta.
 
-        // Se inicializa cola con el nodo de origen y su costo en 0 (no tiene costo a si mismo)
+        // Se inicializa cola con el nodo de origen y su costo en 0 (no tiene costo a si mismo). Indica el nodo de partida.
         colaPrioridad.add(new Nodo(origen, 0));
 
         distancias[origen] = 0;
