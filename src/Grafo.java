@@ -156,6 +156,28 @@ public class Grafo {
         }
     }
 
+public List<Integer> costosDeOperacion(){
+    try{
+        List<Integer> lista = new ArrayList<>(8);
+        File doc = new File("C:\\Users\\54345\\OneDrive\\Escritorio\\Facu\\2do_Cuatri\\Programacion3\\TPO_Programacion3\\clientesYCentros.txt");
+        Scanner obj = new Scanner(doc);
+        int lineaActual = 0; // Inicializa el contador de líneas
+
+        while (obj.hasNextLine() && lineaActual<=7){
+            String data = obj.nextLine();
+            String[] dataSplit = data.split(",");
+            int costoOperacion = Integer.parseInt(dataSplit[2]);
+            lista.add(costoOperacion);
+            lineaActual++;
+        }
+        return lista;
+    }catch (Exception e){
+        System.out.println(e.getMessage());
+        e.printStackTrace();
+        return null;
+    }
+}
+
     public int[] getDistancias(){
         return this.distancias;
     }

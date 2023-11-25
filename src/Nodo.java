@@ -1,10 +1,8 @@
 import java.util.Comparator;
 
 public class Nodo implements Comparator<Nodo>{
-
     private int nodo;
     private int costo;
-    private int costoAlPuerto = Integer.MAX_VALUE;
 
     // Constructor 1
     public Nodo() {}
@@ -34,14 +32,6 @@ public class Nodo implements Comparator<Nodo>{
 
     public int getCosto(){
         return this.costo;
-    }
-
-    public int getCostoAlPuerto() {
-        return this.costoAlPuerto;
-    }
-
-    public void setCostoAlPuerto(int costoAlPuerto) {
-        this.costoAlPuerto = costoAlPuerto;
     }
 }
 

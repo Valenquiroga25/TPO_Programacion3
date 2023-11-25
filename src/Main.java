@@ -1,7 +1,5 @@
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
 
 public class Main {
     public static void main(String[] args){
@@ -30,12 +28,19 @@ public class Main {
         // Se multiplican el volumen por cliente a cada elemento.
         grafo.agregarCostosVolumenCliente(caminosACentros);
 
+        //Lista de costos de operacion
+        List<Integer> costosOperacion = grafo.costosDeOperacion();
+
         // En esta impresión cada fila es el centro y cada columna el cliente que llega.
         for(int i=0; i < caminosACentros.size(); i++) {
-            for (int j = 0; j <= 49; j++){
+            for (int j = 0; j < caminosACentros.get(0).size(); j++){
                 System.out.print(caminosACentros.get(i).get(j) + " ");
             }
             System.out.println();
         }
+
+        System.out.println();
+        for (int i=0;i<costosOperacion.size();i++)
+            System.out.print(costosOperacion.get(i) + " ");
     }
 }
