@@ -34,6 +34,7 @@ public class Main {
             //System.out.println("\nCamino más corto al centro " + i + " cara cada cliente: ");
 
             grafo.dijkstra(conexiones, i); // Acá es donde se hace el Dikstra con cada cliente a cada centro. Lo que hace que cambien los valores de la lista 'distancias'.
+            // El método Dijkstra inicializa la lista 'distancias' por cada llamada (en este caso se hace una llamada por fila) y le va asignando valores segun los caminos del nodo de origen que se le pasa.
 
             List<Integer> caminosPorCliente = new ArrayList<>(49); // Inicializamos la lista que guarda los Dijkstra de un cliente solo.
 
@@ -51,8 +52,8 @@ public class Main {
         // Se multiplican el volumen por cliente a cada elemento.
         grafo.agregarCostosVolumenCliente(caminosACentros);
 
-        //Lista de costos de operacion
-        List<Integer> costosOperacion = grafo.costosDeOperacion();
+        //Lista de costos fijos de centros.
+        List<Integer> costosFijos = grafo.costosDeOperacion();
 
         // En esta impresión cada fila es el centro y cada columna el cliente que llega.
         System.out.println();
@@ -64,7 +65,7 @@ public class Main {
         }
 
         System.out.println();
-        for (int i=0;i<costosOperacion.size();i++)
-            System.out.print(costosOperacion.get(i) + " ");
+        for (int i=0;i<costosFijos.size();i++)
+            System.out.print(costosFijos.get(i) + " ");
     }
 }
