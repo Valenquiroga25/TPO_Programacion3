@@ -3,24 +3,40 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class Main {
-    public static List<Integer> construirCentros(List<List<Nodo>> mapa){
+    public static List<Integer> construirCentros(List<List<Integer>> mapa, List<Integer> costosOperacion){
         PriorityQueue<CO> cola = new PriorityQueue<>();
         List<Integer> x = new ArrayList<>();
         List<Integer> costosClientes  = new ArrayList<>();
 
-        for (int i = 0; i < mapa.size(); i++) {
+        for (int i = 0; i < costosOperacion.size(); i++) {
             x.add(0);
         }
 
-        CO base = new CO(x,mapa,0);
-        CO centro;
+        int centroAConstruir = 0;
+        CO base = new CO(x,mapa, centroAConstruir);
         cola.add(base);
 
+        CO centro = null;
+
         while(!cola.isEmpty()){
+            //Seleccionamos el primer nodo de la cola
             centro = cola.poll();
 
+            //
+            if(centro.u > centro.c){
+
+                List<Integer> x1 = new ArrayList<>(centro.x);
+                x1.add(centro.centroAContruir,1);
+                cola.add(new CO(x1,mapa,centroAConstruir+1));
+
+                if(costosOperacion.get(centro.centroAContruir)>centro.u){
+                    List<Integer> x2 = new ArrayList<>(centro.x);
+                    x2.add(centro.centroAContruir,-1);
+                    cola.add(new CO(x2,mapa,centroAConstruir+1));
+                }
+            }
         }
-        return null;
+        return centro.x;
     }
 
     public static void main(String[] args){
