@@ -106,9 +106,25 @@ public class CO implements Comparable<CO> {
         }
 
         for(int k=0;k < columnas;k++) {
-            if (Objects.equals(mapa.get(centroAContruir).get(k), valoresMinimos.get(k))) // Si el valor de la matriz en la fila del centro actual es la menor de la columna podemos sacar la RedMin y RedMax.
-                /*reduccionMinima += segundo valor minimo - valor minimo*/ ;
+            if (Objects.equals(mapa.get(centroAContruir).get(k), valoresMinimos.get(k))){ // Si el valor es el más chico de la columna.
+                int valorMinimo = valoresMinimos.get(k);
+                int segundoValorMinimo = Integer.MAX_VALUE;
+
+                for (int i = 0; i < filas; i++) { // Iteramos por cada fila de la columna actual para encontrar el segundo valor minimo.
+
+                    if (x.get(i) != -1 && mapa.get(i).get(k) != valorMinimo) { // Si el centro es posible o construido y si el valor no es el minimo.
+                        if(mapa.get(i).get(k) < segundoValorMinimo)
+                            segundoValorMinimo = mapa.get(i).get(k);
+                    }
+                }
+
+                // Si encontramos un segundo valor mínimo, actualizamos la reducción mínima
+                if (segundoValorMinimo != Integer.MAX_VALUE) {
+                    reduccionMinima += segundoValorMinimo - valorMinimo;
+                }
+            }
         }
+    }
 
         // Lo de mateo
         /*
@@ -124,7 +140,6 @@ public class CO implements Comparable<CO> {
             }
         }
          */
-    }
 
     private void setReduccionMaxima(){
         this.reduccionMaxima = 0;
