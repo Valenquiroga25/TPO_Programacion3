@@ -3,21 +3,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class CO implements Comparable<CO> {
-    //Lista que reprenta si los centros estan en construidos (x[i]=1),eventuales (x[i]=0) y descartados(x[i]=-1)
-    List<Integer> x;
-    //Matriz de con los caminos
-    List<List<Integer>> mapa;
-    // Costos fijos de cada centro
-    List<Integer> costosFijos;
-
-    //Lista con el costo Minimo de cada cliente a un centro construido
-    List<Integer> costosMinimos; /*Lista que uso para calcular u*/
-    //Lista con el costo Minimo de cada cliente a un centro construido y posible
-    List<Integer> costoMinimosPosibles;
-    //suma de los costos mínimos de los COs construidos + costos hijos de los COs construidos
-    int u;
-    //suma de los costos mínimos de los COs construidos y eventuales + costos hijos de los COs construidos
-    int c;
+    List<Integer> x; //Lista que reprenta si los centros estan en construidos (x[i]=1),eventuales (x[i]=0) y descartados(x[i]=-1)
+    List<List<Integer>> mapa; //Matriz de con los caminos
+    List<Integer> costosFijos; // Costos fijos de cada centro
+    List<Integer> costosMinimos; //Lista con el costo Minimo de cada cliente a un centro construido (Lista que uso para calcular u)
+    List<Integer> costoMinimosPosibles; //Lista con el costo Minimo de cada cliente a un centro construido y posible
+    List<Integer> valoresMinimos; // Lista con valores minimos de las columnas de los centros construidos o posibles
+    int u; //suma de los costos mínimos de los COs construidos + costos hijos de los COs construidos
+    int c; //suma de los costos mínimos de los COs construidos y eventuales + costos hijos de los COs construidos
     int reduccionMinima;
     int reduccionMaxima;
     int centroAContruir;
@@ -97,7 +90,7 @@ public class CO implements Comparable<CO> {
 
     private void setReduccionMinima() {
         this.reduccionMinima = 0;
-        List<Integer> valoresMinimos = new ArrayList<>(columnas); // Lista con valores minimos de cada columna.
+        valoresMinimos = new ArrayList<>(columnas); // Lista con valores minimos de cada columna.
 
         for(int k=0;k < mapa.get(0).size();k++)
             valoresMinimos.add(Integer.MAX_VALUE);
@@ -141,19 +134,27 @@ public class CO implements Comparable<CO> {
         for(int k=0;k < mapa.get(0).size();k++)
             valoresMaximos.add(0);
 
-        // Todo este for se usa para calcular el valor máximo de cada columna de centros != -1.
+        // Todo este for se usa para calcular el valor máximo de cada columna de centros == 1.
         for(int j=0;j < columnas;j++) {
             for (int i=0;i < filas;i++){
-                if (x.get(i) != -1){ // Se comparan los valores de los centros construido o por construir.
+                if (x.get(i) == 1){ // Se comparan los valores de los centros construidos.
                     if(mapa.get(i).get(j) > valoresMaximos.get(j)) // Se pregunta si el valor de el centro en el que nos encontramos es igual al valor máximo de los centros != -1.
                         valoresMaximos.set(j, mapa.get(i).get(j));
                 }
             }
         }
 
-        for(int k=0;k < columnas;k++) {
-            if (!Objects.equals(mapa.get(centroAContruir).get(k), valoresMaximos.get(k))) // Si no es el valor maximo de la columna. Hacer el valor maximo menos el valor de este centro.
-                reduccionMaxima += (valoresMaximos.get(k) - mapa.get(centroAContruir).get(k));
+        if (centroAContruir==0){ // Si es igual a 0 se trabaja con lista 'valoresMinimos', que contiene valores minimos de las columnas de los centros construidos o posibles.
+            for(int k=0;k < columnas;k++) {
+                if (!Objects.equals(mapa.get(centroAContruir).get(k), valoresMaximos.get(k)) && mapa.get(centroAContruir).get(k) == valoresMinimos.get(k)) // Si no es el valor maximo de la columna. Hacer el valor maximo menos el valor de este centro (si es el minimo).
+                    reduccionMaxima += (valoresMaximos.get(k) - mapa.get(centroAContruir).get(k));
+            }
+
+        }else{ // Sino se trabaja con la lista 'costosMinimos', que seria la lista los valores minimos de cada columna (cliente) de los centros construidos.
+            for(int k=0;k < columnas;k++) {
+                if (!Objects.equals(mapa.get(centroAContruir).get(k), valoresMaximos.get(k)) && mapa.get(centroAContruir).get(k) == costosMinimos.get(k)) // Si no es el valor maximo de la columna. Hacer el valor maximo menos el valor de este centro (si es el minimo).
+                    reduccionMaxima += (valoresMaximos.get(k) - mapa.get(centroAContruir).get(k));
+            }
         }
 
         // Lo de mateo
