@@ -3,17 +3,13 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class Main {
-    public static List<Integer> construirCentros(List<List<Integer>> mapa, List<Integer> costosOperacion){
+    public static List<Integer> construirCentros(List<List<Integer>> mapa, List<Integer> costosFijos){
         PriorityQueue<CO> cola = new PriorityQueue<>();
-        List<Integer> x = new ArrayList<>();
+        List<Integer> x = new ArrayList<>(8);
         List<Integer> costosClientes  = new ArrayList<>();
 
-        for (int i = 0; i < costosOperacion.size(); i++) {
-            x.add(0);
-        }
-
         int centroAConstruir = 0;
-        CO base = new CO(x,mapa, centroAConstruir);
+        CO base = new CO(x,mapa,costosFijos,centroAConstruir);
         cola.add(base);
 
         CO centro = null;
@@ -27,12 +23,12 @@ public class Main {
 
                 List<Integer> x1 = new ArrayList<>(centro.x);
                 x1.add(centro.centroAContruir,1);
-                cola.add(new CO(x1,mapa,centroAConstruir+1));
+                cola.add(new CO(x1,mapa,costosFijos,centroAConstruir+1));
 
-                if(costosOperacion.get(centro.centroAContruir)>centro.u){
+                if(costosFijos.get(centro.centroAContruir)>centro.u){
                     List<Integer> x2 = new ArrayList<>(centro.x);
                     x2.add(centro.centroAContruir,-1);
-                    cola.add(new CO(x2,mapa,centroAConstruir+1));
+                    cola.add(new CO(x2,mapa,costosFijos,centroAConstruir+1));
                 }
             }
         }
@@ -83,5 +79,11 @@ public class Main {
         System.out.println();
         for (int i=0;i<costosFijos.size();i++)
             System.out.print(costosFijos.get(i) + " ");
+
+        List<Integer> construccion = construirCentros(caminosACentros,costosFijos);
+
+        System.out.println("Centros a construir: ");
+        for(int i=0;i<construccion.size();i++)
+            System.out.print(construccion.get(i) + " ");
     }
 }
