@@ -153,7 +153,7 @@ public class CO implements Comparable<CO> {
 
         for(int k=0;k < columnas;k++) {
             if (!Objects.equals(mapa.get(centroAContruir).get(k), valoresMaximos.get(k))) // Si no es el valor maximo de la columna. Hacer el valor maximo menos el valor de este centro.
-                /*reduccionMaxima += valor maximo - valor actual*/ ;
+                reduccionMaxima += (valoresMaximos.get(k) - mapa.get(centroAContruir).get(k));
         }
 
         // Lo de mateo
