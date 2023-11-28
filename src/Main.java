@@ -5,37 +5,44 @@ import java.util.PriorityQueue;
 public class Main {
     public static List<Integer> construirCentros(List<List<Integer>> mapa, List<Integer> costosFijos){
         PriorityQueue<CO> cola = new PriorityQueue<>();
-        List<Integer> x = new ArrayList<>(8);
-        List<Integer> costosClientes  = new ArrayList<>();
+        List<Integer> x = new ArrayList<>();
 
+        for (int i = 0; i < costosFijos.size(); i++) {
+            x.add(i,0);
+        }
         int centroAConstruir = 0;
+
         CO base = new CO(x,mapa,costosFijos,centroAConstruir);
         cola.add(base);
-
         CO centro = null;
 
         while(!cola.isEmpty()){
             //Seleccionamos el primer nodo de la cola
             centro = cola.poll();
 
-            //
-            if(centro.u > centro.c){
+            if (centro.c == centro.u){
+                break;
+            }
 
-                List<Integer> x1 = new ArrayList<>(centro.x);
-                x1.add(centro.centroAContruir,1);
-                cola.add(new CO(x1,mapa,costosFijos,centroAConstruir+1));
-
-                if(costosFijos.get(centro.centroAContruir)>centro.u){
+            if(centroAConstruir < x.size()){
+                if(centro.u > centro.c && centro.reduccionMinima >= costosFijos.get(centro.centroAContruir)) {
+                    List<Integer> x1 = new ArrayList<>(centro.x);
+                    x1.add(centro.centroAContruir, 1);
+                    cola.add(new CO(x1, mapa, costosFijos, centroAConstruir + 1));
+                }
+                if(costosFijos.get(centro.centroAContruir)>centro.reduccionMinima && centro.u > centro.c){
                     List<Integer> x2 = new ArrayList<>(centro.x);
                     x2.add(centro.centroAContruir,-1);
                     cola.add(new CO(x2,mapa,costosFijos,centroAConstruir+1));
                 }
+
             }
         }
         return centro.x;
     }
 
     public static void main(String[] args){
+        /*
         int V = 58;
         List<List<Integer>> caminosACentros = new ArrayList<>(); // Lista que guarda los Dijkstra de cada cliente.
 
@@ -82,8 +89,63 @@ public class Main {
 
         List<Integer> construccion = construirCentros(caminosACentros,costosFijos);
 
-        System.out.println("Centros a construir: ");
+        System.out.println();
+        System.out.print("Centros a construir: ");
         for(int i=0;i<construccion.size();i++)
             System.out.print(construccion.get(i) + " ");
+         */
+
+        List<List<Integer>> matriz = new ArrayList<>();
+
+        List<Integer> fila0 = new ArrayList<>();
+        List<Integer> fila1 = new ArrayList<>();
+        List<Integer> fila2 = new ArrayList<>();
+        List<Integer> fila3 = new ArrayList<>();
+
+        fila0.add(3);
+        fila0.add(10);
+        fila0.add(8);
+        fila0.add(18);
+        fila0.add(14);
+
+        fila1.add(9);
+        fila1.add(4);
+        fila1.add(6);
+        fila1.add(5);
+        fila1.add(5);
+
+        fila2.add(12);
+        fila2.add(6);
+        fila2.add(10);
+        fila2.add(4);
+        fila2.add(8);
+
+        fila3.add(8);
+        fila3.add(6);
+        fila3.add(5);
+        fila3.add(12);
+        fila3.add(9);
+
+        matriz.add(fila0);
+        matriz.add(fila1);
+        matriz.add(fila2);
+        matriz.add(fila3);
+
+        List<Integer> costosFijos = new ArrayList<>();
+        costosFijos.add(4);
+        costosFijos.add(6);
+        costosFijos.add(6);
+        costosFijos.add(8);
+
+        List<Integer> resultado = construirCentros(matriz,costosFijos);
+
+        for (int i=0;i<matriz.size();i++){
+            System.out.println(matriz.get(i) + " ");
+        }
+
+        System.out.println();
+        System.out.print("Centros a construir: ");
+        for(int i=0;i<resultado.size();i++)
+            System.out.print(resultado.get(i) + " ");
     }
 }
