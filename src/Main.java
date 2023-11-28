@@ -7,35 +7,48 @@ public class Main {
         PriorityQueue<CO> cola = new PriorityQueue<>();
         List<Integer> x = new ArrayList<>();
 
+
         for (int i = 0; i < costosFijos.size(); i++) {
             x.add(i,0);
         }
-        int centroAConstruir = 0;
 
-        CO base = new CO(x,mapa,costosFijos,centroAConstruir);
+        CO base = new CO(x,mapa,costosFijos,0);
         cola.add(base);
         CO centro = null;
 
-        while(!cola.isEmpty()){
+        while(!cola.isEmpty()) {
+
             //Seleccionamos el primer nodo de la cola
             centro = cola.poll();
 
-            if (centro.c == centro.u){
+            if (centro.c == centro.u) {
                 break;
             }
 
-            if(centroAConstruir < x.size()){
-                if(centro.u > centro.c && centro.reduccionMinima >= costosFijos.get(centro.centroAContruir)) {
-                    List<Integer> x1 = new ArrayList<>(centro.x);
-                    x1.add(centro.centroAContruir, 1);
-                    cola.add(new CO(x1, mapa, costosFijos, centroAConstruir + 1));
-                }
-                if(costosFijos.get(centro.centroAContruir)>centro.reduccionMinima && centro.u > centro.c){
-                    List<Integer> x2 = new ArrayList<>(centro.x);
-                    x2.add(centro.centroAContruir,-1);
-                    cola.add(new CO(x2,mapa,costosFijos,centroAConstruir+1));
-                }
+            int centroSiguiente = centro.centroAContruir+1;
 
+            if (centroSiguiente < costosFijos.size()) { // Me parece que esto está mal porque hay que crear una cantidad de nodos mayor a la cantidad de nodos finales.
+                if (centro.u > centro.c && centro.reduccionMinima >= costosFijos.get(centro.centroAContruir)) {
+                    List<Integer> x1 = new ArrayList<>(centro.x);
+                    x1.set(centro.centroAContruir, 1);
+                    cola.add(new CO(x1, mapa, costosFijos, centro.centroAContruir + 1));
+
+                }else if(centro.u < centro.c){
+                    List<Integer> x4 = new ArrayList<>(centro.x);
+                    x4.set(centro.centroAContruir, -1);
+                    cola.add(new CO(x4, mapa, costosFijos, centro.centroAContruir + 1));
+
+                }else{ // En este else hay q ver las dos posibilidades y añadir ambas a la cola.
+
+                    List<Integer> x2 = new ArrayList<>(centro.x); // Lista con situación de construido
+                    x2.set(centro.centroAContruir, 1);
+
+                    List<Integer> x3 = new ArrayList<>(centro.x); // Lista con situacion de no construido.
+                    x3.set(centro.centroAContruir, -1);
+
+                    cola.add(new CO(x2, mapa, costosFijos, centro.centroAContruir + 1));
+                    cola.add(new CO(x3, mapa, costosFijos, centro.centroAContruir + 1));
+                }
             }
         }
         return centro.x;
@@ -93,7 +106,7 @@ public class Main {
         System.out.print("Centros a construir: ");
         for(int i=0;i<construccion.size();i++)
             System.out.print(construccion.get(i) + " ");
-         */
+        */
 
         List<List<Integer>> matriz = new ArrayList<>();
 

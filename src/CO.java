@@ -71,7 +71,7 @@ public class CO implements Comparable<CO> {
         }
 
         for (int i = 0; i < filas ; i++) { // Itera para cada centro construido o por construir.
-            if (x.get(i) != 1) {
+            if (x.get(i) != -1) {
                 for (int j = 0; j < columnas; j++) {
                     if (costoMinimosPosibles.get(j) > mapa.get(i).get(j)) // 'mapa.get(listaParaC.get(i))' representa que quiero analizar los valores de las columnas de esas filas.
                         costoMinimosPosibles.set(j, mapa.get(i).get(j));
@@ -128,21 +128,6 @@ public class CO implements Comparable<CO> {
         }
     }
 
-        // Lo de mateo
-        /*
-        for (int i = 0; i < mapa.get(i).size(); i++) {
-            if (costosMinimos.get(i) == mapa.get(centroAContruir).get(i)) {
-                int segundoMinimo = Integer.MAX_VALUE;
-                for (int j = 0; j < mapa.size(); j++) {
-                    if (j != centroAContruir && segundoMinimo > mapa.get(j).get(i) && x.get(j)!=-1) {
-                        segundoMinimo = mapa.get(j).get(i);
-                    }
-                }
-                this.reduccionMinima += segundoMinimo - mapa.get(centroAContruir).get(i);
-            }
-        }
-         */
-
     private void setReduccionMaxima(){
         this.reduccionMaxima = 0;
 
@@ -151,61 +136,40 @@ public class CO implements Comparable<CO> {
         for(int k=0;k < mapa.get(0).size();k++)
             valoresMaximos.add(0);
 
-        // Todo este for se usa para calcular el valor máximo de cada columna de centros == 1.
+        // Todo este for se usa para calcular el valor máximo de cada columna. Si el centro es == 0 agarramos el valor de cada columna y cada fila.
         for(int j=0;j < columnas;j++) {
-            for (int i=0;i < filas;i++){
-                if (centroAContruir!=0) {
-                    if (x.get(i) == 1) { // Se comparan los valores de los centros construidos.
+            if (centroAContruir!=0) {
+                for (int i=0;i <= centroAContruir;i++){
+                        if (x.get(i) != -1) { // Se comparan los valores de los centros construidos o posibles solo hasta la fila que deseo.
+                            if (mapa.get(i).get(j) > valoresMaximos.get(j)) // Se pregunta si el valor de el centro en el que nos encontramos es igual al valor máximo de los centros != -1.
+                                valoresMaximos.set(j, mapa.get(i).get(j));
+                        }
+                }
+            }else {
+                    //  Si el centroAConstruir es > 1 agarramos los valores más grandes de cada columna pero solo contando las fila hasta la que estamos.
+                    for (int i=0;i < filas;i++) {
                         if (mapa.get(i).get(j) > valoresMaximos.get(j)) // Se pregunta si el valor de el centro en el que nos encontramos es igual al valor máximo de los centros != -1.
                             valoresMaximos.set(j, mapa.get(i).get(j));
                     }
-                }else {
-                    if (mapa.get(i).get(j) > valoresMaximos.get(j)) // Se pregunta si el valor de el centro en el que nos encontramos es igual al valor máximo de los centros != -1.
-                        valoresMaximos.set(j, mapa.get(i).get(j));
                 }
             }
-        }
 
-        if (centroAContruir==0){ // Si es igual a 0 se trabaja con lista 'valoresMinimos', que contiene valores minimos de las columnas de los centros construidos o posibles.
+        if (centroAContruir==0){
             for(int k=0;k < columnas;k++) {
                 if (!Objects.equals(mapa.get(centroAContruir).get(k), valoresMaximos.get(k))) // Si no es el valor maximo de la columna. Hacer el valor maximo menos el valor de este centro (si es el minimo).
                     reduccionMaxima += (valoresMaximos.get(k) - mapa.get(centroAContruir).get(k));
             }
 
-        }else{ // Sino se trabaja con la lista 'costosMinimos', que seria la lista los valores minimos de cada columna (cliente) de los centros construidos.
+        }else{ // Sino se trabaja con la lista 'valoresMinimos', que seria la lista los valores minimos de cada columna (cliente) de los centros construidos y eventuales.
             for(int k=0;k < columnas;k++) {
-                if (!Objects.equals(mapa.get(centroAContruir).get(k), valoresMaximos.get(k)) && mapa.get(centroAContruir).get(k) == costosMinimos.get(k)) // Si no es el valor maximo de la columna. Hacer el valor maximo menos el valor de este centro (si es el minimo).
+                if (!Objects.equals(mapa.get(centroAContruir).get(k), valoresMaximos.get(k)) && mapa.get(centroAContruir).get(k) == valoresMinimos.get(k)) // Si no es el valor maximo de la columna y sea el valor minimo de la columna (contando construidos y posibles).
                     reduccionMaxima += (valoresMaximos.get(k) - mapa.get(centroAContruir).get(k));
             }
         }
-
-        // Lo de mateo
-        /*
-        for (int i = 0; i < mapa.get(i).size(); i++) {
-            if (costosMinimos.get(i) == mapa.get(centroAContruir).get(i)){
-                int maximo = 0;
-                if(centroAContruir==0) {
-                    for (int j = 0; j < mapa.size(); j++) {
-                        if (j != centroAContruir && maximo > mapa.get(j).get(i) && x.get(j)!=-1) {
-                            maximo = mapa.get(j).get(i);
-                        }
-                    }
-                    this.reduccionMaxima += maximo - mapa.get(centroAContruir).get(i);
-                }else{
-                    for (int j = 0; j < centroAContruir-1; j++) {
-                        if (maximo > mapa.get(j).get(i) && x.get(j)!=-1) {
-                            maximo = mapa.get(j).get(i);
-                        }
-                    }
-                    this.reduccionMaxima += maximo - mapa.get(centroAContruir).get(i);
-                }
-            }
-        }
-        */
     }
 
     @Override
     public int compareTo(CO o) {
-        return Integer.compare(o.u,this.u);
+        return Integer.compare(this.c,o.c);
     }
 }
