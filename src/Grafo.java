@@ -87,7 +87,7 @@ public class Grafo {
         }
 
         try{
-            File doc = new File("C:\\Users\\54345\\OneDrive\\Escritorio\\Facu\\2do_Cuatri\\Programacion3\\TPO_Programacion3\\rutas.txt");
+            File doc = new File("rutas.txt");
             Scanner obj = new Scanner(doc);
             while (obj.hasNextLine()){
                 String data = obj.nextLine();
@@ -105,7 +105,7 @@ public class Grafo {
     }
     public void agregarCostosAlPuerto(List<List<Integer>> caminosACentros){
         try{
-            File doc = new File("C:\\Users\\54345\\OneDrive\\Escritorio\\Facu\\2do_Cuatri\\Programacion3\\TPO_Programacion3\\clientesYCentros.txt");
+            File doc = new File("clientesYCentros.txt");
             Scanner obj = new Scanner(doc);
             int lineaActual = 0; // Inicializa el contador de líneas
 
@@ -129,7 +129,7 @@ public class Grafo {
 
     public void agregarCostosVolumenCliente(List<List<Integer>> caminosACentros) {
         try {
-            File doc = new File("C:\\Users\\54345\\OneDrive\\Escritorio\\Facu\\2do_Cuatri\\Programacion3\\TPO_Programacion3\\clientesYCentros.txt");
+            File doc = new File("clientesYCentros.txt");
             Scanner obj = new Scanner(doc);
             int columna=0;
 
@@ -160,7 +160,7 @@ public class Grafo {
 public List<Integer> costosDeOperacion(){
     try{
         List<Integer> lista = new ArrayList<>(8);
-        File doc = new File("C:\\Users\\54345\\OneDrive\\Escritorio\\Facu\\2do_Cuatri\\Programacion3\\TPO_Programacion3\\clientesYCentros.txt");
+        File doc = new File("clientesYCentros.txt");
         Scanner obj = new Scanner(doc);
         int lineaActual = 0; // Inicializa el contador de líneas
 
