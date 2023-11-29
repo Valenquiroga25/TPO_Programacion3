@@ -7,7 +7,6 @@ public class Main {
         PriorityQueue<CO> cola = new PriorityQueue<>();
         List<Integer> x = new ArrayList<>();
 
-
         for (int i = 0; i < costosFijos.size(); i++) {
             x.add(i,0);
         }
@@ -19,50 +18,67 @@ public class Main {
         while(!cola.isEmpty()) {
 
             //Seleccionamos el primer nodo de la cola
-            centro = cola.poll();
+                centro = cola.poll();
 
-            if (centro.c == centro.u) {
-                break;
-            }
 
-            int centroSiguiente = centro.centroAContruir+1;
-
-            if (centroSiguiente < costosFijos.size()) { // Me parece que esto está mal porque hay que crear una cantidad de nodos mayor a la cantidad de nodos finales.
-                if (centro.u > centro.c && centro.reduccionMinima >= costosFijos.get(centro.centroAContruir)) {
+            if (centro.centroAContruir < costosFijos.size()) { // Me parece que esto está mal porque hay que crear una cantidad de nodos mayor a la cantidad de nodos finales.
+                if (centro.reduccionMinima >= costosFijos.get(centro.centroAContruir)) {
                     List<Integer> x1 = new ArrayList<>(centro.x);
                     x1.set(centro.centroAContruir, 1);
-                    cola.add(new CO(x1, mapa, costosFijos, centro.centroAContruir + 1));
+                    if(centro.centroAContruir != costosFijos.size()-1)
+                        cola.add(new CO(x1, mapa, costosFijos, centro.centroAContruir + 1));
+                    else{
+                        CO centroFinal = new CO(x1, mapa, costosFijos, centro.centroAContruir);
+                        if (centroFinal.c == centroFinal.u)
+                            return centroFinal.x;
+                    }
 
-                }else if(centro.u < centro.c){
-                    List<Integer> x4 = new ArrayList<>(centro.x);
-                    x4.set(centro.centroAContruir, -1);
-                    cola.add(new CO(x4, mapa, costosFijos, centro.centroAContruir + 1));
+                } else if(centro.reduccionMaxima < costosFijos.get(centro.centroAContruir) ){
+                    List<Integer> x2 = new ArrayList<>(centro.x); // Lista con situación de construido
+                    x2.set(centro.centroAContruir, -1);
 
+                    if(centro.centroAContruir != costosFijos.size()-1)
+                        cola.add(new CO(x2, mapa, costosFijos, centro.centroAContruir + 1));
+                    else{
+                        CO centroFinal = new CO(x2, mapa, costosFijos, centro.centroAContruir);
+                        if (centroFinal.c == centroFinal.u)
+                            return centroFinal.x;
+                    }
                 }else{ // En este else hay q ver las dos posibilidades y añadir ambas a la cola.
 
-                    List<Integer> x2 = new ArrayList<>(centro.x); // Lista con situación de construido
-                    x2.set(centro.centroAContruir, 1);
+                    List<Integer> x3 = new ArrayList<>(centro.x); // Lista con situación de construido
+                    x3.set(centro.centroAContruir, 1);
 
-                    List<Integer> x3 = new ArrayList<>(centro.x); // Lista con situacion de no construido.
-                    x3.set(centro.centroAContruir, -1);
+                    List<Integer> x4 = new ArrayList<>(centro.x); // Lista con situacion de no construido.
+                    x4.set(centro.centroAContruir, -1);
 
-                    cola.add(new CO(x2, mapa, costosFijos, centro.centroAContruir + 1));
-                    cola.add(new CO(x3, mapa, costosFijos, centro.centroAContruir + 1));
+                    if(centro.centroAContruir != costosFijos.size()-1) {
+                        cola.add(new CO(x3, mapa, costosFijos, centro.centroAContruir + 1));
+                        cola.add(new CO(x4, mapa, costosFijos, centro.centroAContruir + 1));
+                    }else{
+                        CO c3 = new CO(x3, mapa, costosFijos, centro.centroAContruir);
+                        CO c4 = new CO(x4, mapa, costosFijos, centro.centroAContruir);
+
+                        if (c3.c == c3.u)
+                            return c3.x;
+                        else if (c4.c == c4.u)
+                            return c4.x;
+                    }
                 }
             }
         }
+
         return centro.x;
     }
 
-    public static void main(String[] args){
-        /*
+    public static void main(String[] args) {
         int V = 58;
         List<List<Integer>> caminosACentros = new ArrayList<>(); // Lista que guarda los Dijkstra de cada cliente.
 
         Grafo grafo = new Grafo(V);
         List<List<Nodo>> conexiones = grafo.establecerConexiones(V); // Lista que establece las conexiones entre nodos.
 
-        for (int i=50; i < 58; i++){
+        for (int i = 50; i < 58; i++) {
             //System.out.println("\nCamino más corto al centro " + i + " cara cada cliente: ");
 
             grafo.dijkstra(conexiones, i); // Acá es donde se hace el Dikstra con cada cliente a cada centro. Lo que hace que cambien los valores de la lista 'distancias'.
@@ -89,25 +105,25 @@ public class Main {
 
         // En esta impresión cada fila es el centro y cada columna el cliente que llega.
         System.out.println();
-        for(int i=0; i < caminosACentros.size(); i++) {
-            for (int j = 0; j < caminosACentros.get(0).size(); j++){
+        for (int i = 0; i < caminosACentros.size(); i++) {
+            for (int j = 0; j < caminosACentros.get(0).size(); j++) {
                 System.out.print(caminosACentros.get(i).get(j) + " ");
             }
             System.out.println();
         }
 
         System.out.println();
-        for (int i=0;i<costosFijos.size();i++)
+        for (int i = 0; i < costosFijos.size(); i++)
             System.out.print(costosFijos.get(i) + " ");
 
-        List<Integer> construccion = construirCentros(caminosACentros,costosFijos);
+        List<Integer> construccion = construirCentros(caminosACentros, costosFijos);
 
         System.out.println();
         System.out.print("Centros a construir: ");
-        for(int i=0;i<construccion.size();i++)
+        for (int i = 0; i < construccion.size(); i++)
             System.out.print(construccion.get(i) + " ");
-        */
-
+    }
+    /*
         List<List<Integer>> matriz = new ArrayList<>();
 
         List<Integer> fila0 = new ArrayList<>();
@@ -161,4 +177,6 @@ public class Main {
         for(int i=0;i<resultado.size();i++)
             System.out.print(resultado.get(i) + " ");
     }
+     */
 }
+

@@ -113,10 +113,11 @@ public class CO implements Comparable<CO> {
                 int segundoValorMinimo = Integer.MAX_VALUE;
 
                 for (int i = 0; i < filas; i++) { // Iteramos por cada fila de la columna actual para encontrar el segundo valor minimo.
-
-                    if (x.get(i) != -1 && mapa.get(i).get(k) != valorMinimo) { // Si el centro es posible o construido y si el valor no es el minimo.
-                        if(mapa.get(i).get(k) < segundoValorMinimo)
-                            segundoValorMinimo = mapa.get(i).get(k);
+                    if(mapa.get(i) != mapa.get(centroAContruir)) {
+                        if (x.get(i) != -1 && valorMinimo <= mapa.get(i).get(k)) { // Si el centro es posible o construido y si el valor no es el minimo.
+                            if (mapa.get(i).get(k) < segundoValorMinimo)
+                                segundoValorMinimo = mapa.get(i).get(k);
+                        }
                     }
                 }
 
