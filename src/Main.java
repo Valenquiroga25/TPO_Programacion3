@@ -113,6 +113,7 @@ public class Main {
                 }
             }
         }
+
         System.out.println("\nLos centros que deben construirse son los siguientes: " + centros);
         System.out.println("\nCentro conveniente para cada cliente:");
         for(int k=0;k < columnas;k++)
