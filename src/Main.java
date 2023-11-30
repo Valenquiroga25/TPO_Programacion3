@@ -123,6 +123,7 @@ public class Main {
         for (int i = 0; i < construccion.size(); i++)
             System.out.print(construccion.get(i) + " ");
     }
+
     /*
         List<List<Integer>> matriz = new ArrayList<>();
 

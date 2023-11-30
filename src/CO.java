@@ -6,9 +6,8 @@ public class CO implements Comparable<CO> {
     List<Integer> x; //Lista que reprenta si los centros estan en construidos (x[i]=1),eventuales (x[i]=0) y descartados(x[i]=-1)
     List<List<Integer>> mapa; //Matriz de con los caminos
     List<Integer> costosFijos; // Costos fijos de cada centro
-    List<Integer> costosMinimos; //Lista con el costo Minimo de cada cliente a un centro construido (Lista que uso para calcular u)
-    List<Integer> costoMinimosPosibles; //Lista con el costo Minimo de cada cliente a un centro construido y posible
-    List<Integer> valoresMinimos; // Lista con valores minimos de las columnas de los centros construidos o posibles
+    List<Integer> costosMinimos; //Lista con el costo Minimo de los centros construidos. (Lista que uso para calcular u)
+    List<Integer> costoMinimosPosibles; //Lista con los costos minimos de centros construidos y eventuales. (Lista para calcular c)
     int u; //suma de los costos mínimos de los COs construidos + costos hijos de los COs construidos
     int c; //suma de los costos mínimos de los COs construidos y eventuales + costos hijos de los COs construidos
     int reduccionMinima;
@@ -50,7 +49,7 @@ public class CO implements Comparable<CO> {
                 this.u += costosMinimos.get(w);
             }
 
-            // Se suman los costos fijos de los centros a u.
+            // Se suman los costos fijos de los centros construidos a u.
             for(int k=0;k<x.size();k++){
                 if (x.get(k)==1)
                     this.u+=costosFijos.get(k);
@@ -60,7 +59,7 @@ public class CO implements Comparable<CO> {
 
     private void setCostosMinimosPosibles(){ // Valor de c.
         costoMinimosPosibles = new ArrayList<>(); // Lista con cantidad de elementos que de columnas en matriz.
-        List<Integer> listaParaC = new ArrayList<>(); // Se crea lista para almacenar los indices de los centros != -1. Luego se itera por columna de filas de centros != -1.
+        List<Integer> listaParaC = new ArrayList<>(); // Se crea lista para almacenar los indices de los centros != -1. Esto es para sumar los costos fijos de los centros construidos.
 
         for(int k=0;k < columnas;k++)
             costoMinimosPosibles.add(Integer.MAX_VALUE); // Como necesitamos encontrar valores minimos se inicializa con valores 'infinitos'. Sino nunca se modifica.
@@ -73,7 +72,7 @@ public class CO implements Comparable<CO> {
         for (int i = 0; i < filas ; i++) { // Itera para cada centro construido o por construir.
             if (x.get(i) != -1) {
                 for (int j = 0; j < columnas; j++) {
-                    if (costoMinimosPosibles.get(j) > mapa.get(i).get(j)) // 'mapa.get(listaParaC.get(i))' representa que quiero analizar los valores de las columnas de esas filas.
+                    if (costoMinimosPosibles.get(j) > mapa.get(i).get(j))
                         costoMinimosPosibles.set(j, mapa.get(i).get(j));
                 }
             }
@@ -92,28 +91,17 @@ public class CO implements Comparable<CO> {
 
     private void setReduccionMinima() {
         this.reduccionMinima = 0;
-        valoresMinimos = new ArrayList<>(); // Lista con valores minimos de cada columna.
 
-        for(int k=0;k < columnas;k++)
-            valoresMinimos.add(Integer.MAX_VALUE);
-
-        // Todo este for se usa para calcular el valor minimo de cada columna de centros != -1.
-        for(int j=0;j < columnas;j++) {
-            for (int i=0;i < filas;i++){
-                if (x.get(i) != -1){ // Se comparan los valores de los centros construido o por construir. Por eso no uso costosMinimos.
-                    if(mapa.get(i).get(j) < valoresMinimos.get(j)) // Se pregunta si el valor de el centro en el que nos encontramos es igual al valor minimo de los centros != -1.
-                        valoresMinimos.set(j, mapa.get(i).get(j));
-                }
-            }
-        }
-
+        // Acá utilizamos la costosMinimosPosibles porque contiene los valores minimos de los centros construidos o eventuales.
         for(int k=0;k < columnas;k++) {
-            if (Objects.equals(mapa.get(centroAContruir).get(k), valoresMinimos.get(k))){ // Si el valor es el más chico de la columna.
-                int valorMinimo = valoresMinimos.get(k);
+            if (Objects.equals(mapa.get(centroAContruir).get(k), costoMinimosPosibles.get(k))){ // Si el valor es el más chico de la columna.
+                int valorMinimo = costoMinimosPosibles.get(k);
                 int segundoValorMinimo = Integer.MAX_VALUE;
 
-                for (int i = 0; i < filas; i++) { // Iteramos por cada fila de la columna actual para encontrar el segundo valor minimo.
-                    if(mapa.get(i) != mapa.get(centroAContruir)) {
+                for (int i = 0; i < filas; i++) { // Iteramos por cada fila de la columna actual para encontrar el segundo valor minimo de centros construidos o eventuales.
+
+                    if(mapa.get(i) != mapa.get(centroAContruir)) { // Si no nos encontramos en la fila del centro que estamos analizando. Esto lo agregamos porque más adelante debemos hacer el segundo valor más chico - el primero. Y el segundo valor minimo puede tener el mismo valor que el actual.
+
                         if (x.get(i) != -1 && valorMinimo <= mapa.get(i).get(k)) { // Si el centro es posible o construido y si el valor no es el minimo.
                             if (mapa.get(i).get(k) < segundoValorMinimo)
                                 segundoValorMinimo = mapa.get(i).get(k);
@@ -129,7 +117,7 @@ public class CO implements Comparable<CO> {
         }
     }
 
-    private void setReduccionMaxima(){ // Implementacion que vimos con Seba.
+    private void setReduccionMaxima(){
         this.reduccionMaxima = 0;
 
         List<Integer> valoresMinimosConstruidos = new ArrayList<>(columnas); // Lista con valores minimos de los centros construidos. Lo usan los centros > 0.
