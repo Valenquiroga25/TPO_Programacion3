@@ -32,7 +32,7 @@ public class Grafo {
 
         distancias[origen] = 0;
 
-        while (visitados.size() != V) { // Mientras la lista de visitados no esté vacía
+        while (visitados.size() != V) { // Mientras la lista de visitados no esté llena
 
             if (colaPrioridad.isEmpty())
                 return;

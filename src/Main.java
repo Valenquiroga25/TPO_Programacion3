@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.PriorityQueue;
 
 public class Main {
@@ -21,29 +22,30 @@ public class Main {
                 centro = cola.poll();
 
 
-            if (centro.centroAContruir < costosFijos.size()) { // Me parece que esto está mal porque hay que crear una cantidad de nodos mayor a la cantidad de nodos finales.
-                if (centro.reduccionMinima >= costosFijos.get(centro.centroAContruir)) {
+            if (centro.centroAContruir < costosFijos.size()) {
+                if (centro.reduccionMinima >= costosFijos.get(centro.centroAContruir)) { // Primer poda. Si la reducción minima es mayor al costo fijo del centro se decide construir sin comparación.
                     List<Integer> x1 = new ArrayList<>(centro.x);
                     x1.set(centro.centroAContruir, 1);
                     if(centro.centroAContruir != costosFijos.size()-1)
                         cola.add(new CO(x1, mapa, costosFijos, centro.centroAContruir + 1));
                     else{
-                        CO centroFinal = new CO(x1, mapa, costosFijos, centro.centroAContruir);
+                        CO centroFinal = new CO(x1, mapa, costosFijos, centro.centroAContruir); // Si el centro en analisis es el último el número de centro no se hace +1 porque sino se rompe por OutOfIndex.
                         if (centroFinal.c == centroFinal.u)
                             return centroFinal.x;
                     }
 
-                } else if(centro.reduccionMaxima < costosFijos.get(centro.centroAContruir) ){
-                    List<Integer> x2 = new ArrayList<>(centro.x); // Lista con situación de construido
+                } else if(centro.reduccionMaxima < costosFijos.get(centro.centroAContruir) ){ // Segundo poda. Si la reducción máxima es menor al costo fijo del centro se decide no construir sin comparar.
+                    List<Integer> x2 = new ArrayList<>(centro.x);
                     x2.set(centro.centroAContruir, -1);
 
                     if(centro.centroAContruir != costosFijos.size()-1)
                         cola.add(new CO(x2, mapa, costosFijos, centro.centroAContruir + 1));
                     else{
-                        CO centroFinal = new CO(x2, mapa, costosFijos, centro.centroAContruir);
+                        CO centroFinal = new CO(x2, mapa, costosFijos, centro.centroAContruir); // Si el centro en analisis es el último el número de centro no se hace +1 porque sino se rompe por OutOfIndex.
                         if (centroFinal.c == centroFinal.u)
                             return centroFinal.x;
                     }
+
                 }else{ // En este else hay q ver las dos posibilidades y añadir ambas a la cola.
 
                     List<Integer> x3 = new ArrayList<>(centro.x); // Lista con situación de construido
@@ -56,7 +58,7 @@ public class Main {
                         cola.add(new CO(x3, mapa, costosFijos, centro.centroAContruir + 1));
                         cola.add(new CO(x4, mapa, costosFijos, centro.centroAContruir + 1));
                     }else{
-                        CO c3 = new CO(x3, mapa, costosFijos, centro.centroAContruir);
+                        CO c3 = new CO(x3, mapa, costosFijos, centro.centroAContruir); // Si el centro en analisis es el último el número de centro no se hace +1 porque sino se rompe por OutOfIndex.
                         CO c4 = new CO(x4, mapa, costosFijos, centro.centroAContruir);
 
                         if (c3.c == c3.u)
@@ -71,15 +73,62 @@ public class Main {
         return centro.x;
     }
 
+    public static void impresionResultados(List<List<Integer>> mapa, List<Integer> centrosFinales){
+        int columnas = mapa.get(0).size();
+        List<Integer> centros = new ArrayList<>(); // Lista con centros que deben construirse.
+        List<Integer> valoresMinimos = new ArrayList<>(); // Lista para saber el costo mínimo de cada cliente a cada centro construido.
+        List<Integer> costoMinimoParaCadaCliente = new ArrayList<>(); // Lista para almacenar indice de fila con menor costo (centro conveniente)
+
+        // Se almacenan los centros que se deben construir.
+        for(int i=0;i<centrosFinales.size();i++){
+            if (centrosFinales.get(i) == 1)
+                centros.add(i);
+        }
+
+
+        // Inicializamos lista con valores máximos
+        for(int k=0;k < columnas;k++){
+            valoresMinimos.add(Integer.MAX_VALUE);
+        }
+
+        // Guardamos el valor minimo de cada columna (cliente) y cada fila == 1 (centro construido)
+        for (int j=0;j < columnas;j++){
+                for (int i = 0; i < centrosFinales.size(); i++) {
+                    if (centrosFinales.get(i) == 1) {
+                        if (mapa.get(i).get(j) < valoresMinimos.get(j)){
+                            valoresMinimos.set(j,mapa.get(i).get(j));
+                        }
+                }
+            }
+        }
+
+        // Recorremos de nuevo, si el elemento actual de la matriz es el menor de la columna, guardamos en la lista el indice (centro)
+
+        for (int j=0;j < columnas;j++){
+            for (int i = 0; i < centrosFinales.size(); i++) {
+                if (centrosFinales.get(i) == 1) {
+                    if (Objects.equals(mapa.get(i).get(j), valoresMinimos.get(j))){
+                        costoMinimoParaCadaCliente.add(i);
+                    }
+                }
+            }
+        }
+
+        System.out.println("\nLos centros que deben construirse son los siguientes: " + centros);
+        System.out.println("\nCentro conveniente para cada cliente:");
+        for(int k=0;k < columnas;k++)
+            System.out.println("Cliente " + k + ", centro: " + costoMinimoParaCadaCliente.get(k));
+    }
+
     public static void main(String[] args) {
         int V = 58;
-        List<List<Integer>> caminosACentros = new ArrayList<>(); // Lista que guarda los Dijkstra de cada cliente.
 
         Grafo grafo = new Grafo(V);
         List<List<Nodo>> conexiones = grafo.establecerConexiones(V); // Lista que establece las conexiones entre nodos.
 
+        List<List<Integer>> caminosACentros = new ArrayList<>(); // Lista que guarda los Dijkstra de cada cliente.
+
         for (int i = 50; i < 58; i++) {
-            //System.out.println("\nCamino más corto al centro " + i + " cara cada cliente: ");
 
             grafo.dijkstra(conexiones, i); // Acá es donde se hace el Dikstra con cada cliente a cada centro. Lo que hace que cambien los valores de la lista 'distancias'.
             // El método Dijkstra inicializa la lista 'distancias' por cada llamada (en este caso se hace una llamada por fila) y le va asignando valores segun los caminos del nodo de origen que se le pasa.
@@ -88,9 +137,7 @@ public class Main {
 
             for (int j = 0; j <= 49; j++) {
                 caminosPorCliente.add(grafo.getDistancias()[j]); // Le asignamos los valores a la lista previmente creada.
-                //System.out.println("Costo para cliente " + j + " es: " + grafo.getDistancias()[j]);
             }
-            //System.out.println();
             caminosACentros.add(caminosPorCliente); // Se agrega a la lista de listas.
         }
 
@@ -119,12 +166,16 @@ public class Main {
         List<Integer> construccion = construirCentros(caminosACentros, costosFijos);
 
         System.out.println();
-        System.out.print("Centros a construir: ");
+        System.out.print("\nCentros a construir: ");
         for (int i = 0; i < construccion.size(); i++)
             System.out.print(construccion.get(i) + " ");
+
+        System.out.println();
+        impresionResultados(caminosACentros,construccion);
     }
 
-    /*
+    /* Ejemplo de clase
+
         List<List<Integer>> matriz = new ArrayList<>();
 
         List<Integer> fila0 = new ArrayList<>();
@@ -177,7 +228,10 @@ public class Main {
         System.out.print("Centros a construir: ");
         for(int i=0;i<resultado.size();i++)
             System.out.print(resultado.get(i) + " ");
+
+        System.out.println();
+        impresionResultados(matriz,resultado);
     }
-     */
+    */
 }
 
