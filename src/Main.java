@@ -124,7 +124,6 @@ public class Main {
             System.out.print(construccion.get(i) + " ");
     }
 
-
     /*
         List<List<Integer>> matriz = new ArrayList<>();
 
