@@ -128,7 +128,6 @@ public class Main {
 
         List<List<Integer>> caminosACentros = new ArrayList<>(); // Lista que guarda los Dijkstra de cada cliente.
 
-
         for (int i = 50; i < 58; i++) {
 
             grafo.dijkstra(conexiones, i); // Acá es donde se hace el Dikstra con cada cliente a cada centro. Lo que hace que cambien los valores de la lista 'distancias'.
