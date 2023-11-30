@@ -82,7 +82,7 @@ public class Main {
         // Se almacenan los centros que se deben construir.
         for(int i=0;i<centrosFinales.size();i++){
             if (centrosFinales.get(i) == 1)
-                centros.add(i);
+                centros.add(i + 50);
         }
 
 
@@ -108,7 +108,7 @@ public class Main {
             for (int i = 0; i < centrosFinales.size(); i++) {
                 if (centrosFinales.get(i) == 1) {
                     if (Objects.equals(mapa.get(i).get(j), valoresMinimos.get(j))){
-                        costoMinimoParaCadaCliente.add(i);
+                        costoMinimoParaCadaCliente.add(i + 50);
                     }
                 }
             }
@@ -173,65 +173,5 @@ public class Main {
         System.out.println();
         impresionResultados(caminosACentros,construccion);
     }
-
-    /* Ejemplo de clase
-
-        List<List<Integer>> matriz = new ArrayList<>();
-
-        List<Integer> fila0 = new ArrayList<>();
-        List<Integer> fila1 = new ArrayList<>();
-        List<Integer> fila2 = new ArrayList<>();
-        List<Integer> fila3 = new ArrayList<>();
-
-        fila0.add(3);
-        fila0.add(10);
-        fila0.add(8);
-        fila0.add(18);
-        fila0.add(14);
-
-        fila1.add(9);
-        fila1.add(4);
-        fila1.add(6);
-        fila1.add(5);
-        fila1.add(5);
-
-        fila2.add(12);
-        fila2.add(6);
-        fila2.add(10);
-        fila2.add(4);
-        fila2.add(8);
-
-        fila3.add(8);
-        fila3.add(6);
-        fila3.add(5);
-        fila3.add(12);
-        fila3.add(9);
-
-        matriz.add(fila0);
-        matriz.add(fila1);
-        matriz.add(fila2);
-        matriz.add(fila3);
-
-        List<Integer> costosFijos = new ArrayList<>();
-        costosFijos.add(4);
-        costosFijos.add(6);
-        costosFijos.add(6);
-        costosFijos.add(8);
-
-        List<Integer> resultado = construirCentros(matriz,costosFijos);
-
-        for (int i=0;i<matriz.size();i++){
-            System.out.println(matriz.get(i) + " ");
-        }
-
-        System.out.println();
-        System.out.print("Centros a construir: ");
-        for(int i=0;i<resultado.size();i++)
-            System.out.print(resultado.get(i) + " ");
-
-        System.out.println();
-        impresionResultados(matriz,resultado);
-    }
-    */
 }
 
