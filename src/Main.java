@@ -73,11 +73,12 @@ public class Main {
         return centro.x;
     }
 
-    public static void impresionResultados(List<List<Integer>> mapa, List<Integer> centrosFinales){
+    public static void impresionResultados(List<List<Integer>> mapa, List<Integer> centrosFinales, List<Integer> costosFijos){
         int columnas = mapa.get(0).size();
         List<Integer> centros = new ArrayList<>(); // Lista con centros que deben construirse.
         List<Integer> valoresMinimos = new ArrayList<>(); // Lista para saber el costo mínimo de cada cliente a cada centro construido.
         List<Integer> costoMinimoParaCadaCliente = new ArrayList<>(); // Lista para almacenar indice de fila con menor costo (centro conveniente)
+        int costoFinal = 0;
 
         // Se almacenan los centros que se deben construir.
         for(int i=0;i<centrosFinales.size();i++){
@@ -109,36 +110,44 @@ public class Main {
                 if (centrosFinales.get(i) == 1) {
                     if (Objects.equals(mapa.get(i).get(j), valoresMinimos.get(j))){
                         costoMinimoParaCadaCliente.add(i + 50);
+                        costoFinal+=mapa.get(i).get(j); // Sumamos los valores minimos de cada columna de los centros construidos
                     }
                 }
             }
         }
 
+        for(int k=0;k < costosFijos.size();k++) // Se suman los costos fijos de centros construidos al costo total.
+            if (centrosFinales.get(k) == 1)
+                costoFinal += costosFijos.get(k);
+
         System.out.println("\nLos centros que deben construirse son los siguientes: " + centros);
         System.out.println("\nCentro conveniente para cada cliente:");
+
         for(int k=0;k < columnas;k++)
             System.out.println("Cliente " + k + ", centro: " + costoMinimoParaCadaCliente.get(k));
+
+        System.out.println("\nCosto total final: " + costoFinal);
     }
 
     public static void main(String[] args) {
         int V = 58;
 
         Grafo grafo = new Grafo(V);
-        List<List<Nodo>> conexiones = grafo.establecerConexiones(V); // Lista que establece las conexiones entre nodos.
+        List<List<Nodo>> conexiones = grafo.establecerConexiones(); // Lista que establece las conexiones entre nodos. Devuelve la matriz.
 
         List<List<Integer>> caminosACentros = new ArrayList<>(); // Lista que guarda los Dijkstra de cada cliente.
 
+        // Se calculan los caminos de cada centro a cada cliente para que sea más liviano el procesamiento (al ser menos).
         for (int i = 50; i < 58; i++) {
 
             grafo.dijkstra(conexiones, i); // Acá es donde se hace el Dikstra con cada cliente a cada centro. Lo que hace que cambien los valores de la lista 'distancias'.
-            // El método Dijkstra inicializa la lista 'distancias' por cada llamada (en este caso se hace una llamada por fila) y le va asignando valores segun los caminos del nodo de origen que se le pasa.
 
             List<Integer> caminosPorCliente = new ArrayList<>(49); // Inicializamos la lista que guarda los Dijkstra de un cliente solo.
 
             for (int j = 0; j <= 49; j++) {
                 caminosPorCliente.add(grafo.getDistancias()[j]); // Le asignamos los valores a la lista previmente creada.
             }
-            caminosACentros.add(caminosPorCliente); // Se agrega a la lista de listas.
+            caminosACentros.add(caminosPorCliente); // Se agrega a la lista de listas. Agregamos los minimos caminos por cliente.
         }
 
         // Se suman los costos de transporte al puerto.
@@ -171,7 +180,7 @@ public class Main {
             System.out.print(construccion.get(i) + " ");
 
         System.out.println();
-        impresionResultados(caminosACentros,construccion);
+        impresionResultados(caminosACentros,construccion, costosFijos);
     }
 }
 

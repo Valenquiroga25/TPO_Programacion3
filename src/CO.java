@@ -120,40 +120,25 @@ public class CO implements Comparable<CO> {
     private void setReduccionMaxima(){
         this.reduccionMaxima = 0;
 
-        List<Integer> valoresMinimosConstruidos = new ArrayList<>(columnas); // Lista con valores minimos de los centros construidos. Lo usan los centros > 0.
-
-        for(int k=0;k < mapa.get(0).size();k++)
-            valoresMinimosConstruidos.add(Integer.MAX_VALUE);
 
         List<Integer> valoresMaximos = new ArrayList<>(columnas); // Lista con valores máximos de cada columna. Lo usa el centro 0.
 
         for(int k=0;k < mapa.get(0).size();k++)
             valoresMaximos.add(0);
 
-        if(centroAContruir != 0) {
-            for (int j = 0; j < columnas; j++) {
-                for (int i = 0; i < centroAContruir; i++) {
-                    if (x.get(i) == 1) {
-                        if (mapa.get(i).get(j) < valoresMinimosConstruidos.get(j)) {
-                            valoresMinimosConstruidos.set(j, mapa.get(i).get(j));
-                        }
-                    }
-                }
-            }
-        }else{
-            for (int j = 0; j < columnas; j++) {
-                for (int i=0;i < filas;i++){
-                    if (mapa.get(i).get(j) > valoresMaximos.get(j)){
-                        valoresMaximos.set(j,mapa.get(i).get(j));
-                    }
+
+        for (int j = 0; j < columnas; j++) {
+            for (int i=0;i < filas;i++){
+                if (mapa.get(i).get(j) > valoresMaximos.get(j)){
+                    valoresMaximos.set(j,mapa.get(i).get(j));
                 }
             }
         }
 
         if (centroAContruir != 0)
             for (int k=0;k<columnas;k++){
-                if (mapa.get(centroAContruir).get(k) < valoresMinimosConstruidos.get(k))
-                    this.reduccionMaxima += (valoresMinimosConstruidos.get(k) - mapa.get(centroAContruir).get(k));
+                if (mapa.get(centroAContruir).get(k) < costosMinimos.get(k))
+                    this.reduccionMaxima += (costosMinimos.get(k) - mapa.get(centroAContruir).get(k));
             }
         else
             for(int k=0;k < columnas;k++) {

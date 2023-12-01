@@ -9,12 +9,41 @@ public class Grafo {
     private Set<Integer> visitados; // Arreglo de vértices visitados.
     private PriorityQueue<Nodo> colaPrioridad; // Cola de prioridad para ver posibles nodos que nos den un costo menor.
     private int V; // Número de vertices.
-    List<List<Nodo>> adj; // Lista de adyacencia para cada nodo. Cada elemento de la lista 'adj' es una lista que representa los nodos adyacentes de cada elemento.
+    List<List<Nodo>> adj; // Matriz resultante
 
     // Constructor
     public Grafo(int V) {
         this.V = V;
         distancias = new int[V];
+    }
+
+    // Main driver method
+    public List<List<Nodo>> establecerConexiones() {
+
+        this.adj = new ArrayList<List<Nodo>>();
+
+        // Se inicializa una lista de adyacencia vacía por nodo.
+        for (int i = 0; i < this.V; i++) {
+            List<Nodo> item = new ArrayList<Nodo>();
+            adj.add(item);
+        }
+
+        try{
+            File doc = new File("rutas.txt");
+            Scanner obj = new Scanner(doc);
+            while (obj.hasNextLine()){
+                String data = obj.nextLine();
+                String[] dataSplit = data.split(",");
+                int v1 = Integer.parseInt(dataSplit[0]);
+                int v2 = Integer.parseInt(dataSplit[1]);
+                int costo = Integer.parseInt(dataSplit[2]);
+                adj.get(v1).add(new Nodo(v2, costo));
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return adj;
     }
 
     // Algoritmo Dijkstra
@@ -57,7 +86,7 @@ public class Grafo {
         int newDistance = -1; // Suma de el valor anterior y el costo desde el nodo en proceso hasta un nodo determinado.
 
         // La variable 'v' hace referencia a todos los vecinos de 'u'
-        for (int i = 0; i < adj.get(u).size(); i++) {
+        for (int i = 0; i < adj.get(u).size(); i++) { // Por cada nodo conectado a "u".
             Nodo v = adj.get(u).get(i);
 
             // Si el nodo actual 'v' aún no fue procesado
@@ -75,34 +104,6 @@ public class Grafo {
         }
     }
 
-    // Main driver method
-    public List<List<Nodo>> establecerConexiones(int numeroNodos) {
-
-        this.adj = new ArrayList<List<Nodo>>();
-
-        // Se inicializa una lista de adyacencia vacía por nodo.
-        for (int i = 0; i < numeroNodos; i++) {
-            List<Nodo> item = new ArrayList<Nodo>();
-            adj.add(item);
-        }
-
-        try{
-            File doc = new File("rutas.txt");
-            Scanner obj = new Scanner(doc);
-            while (obj.hasNextLine()){
-                String data = obj.nextLine();
-                String[] dataSplit = data.split(",");
-                int v1 = Integer.parseInt(dataSplit[0]);
-                int v2 = Integer.parseInt(dataSplit[1]);
-                int costo = Integer.parseInt(dataSplit[2]);
-                adj.get(v1).add(new Nodo(v2, costo));
-            }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-        return adj;
-    }
     public void agregarCostosAlPuerto(List<List<Integer>> caminosACentros){
         try{
             File doc = new File("clientesYCentros.txt");
