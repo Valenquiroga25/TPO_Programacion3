@@ -21,7 +21,6 @@ public class Main {
             //Seleccionamos el primer nodo de la cola
                 centro = cola.poll();
 
-
             if (centro.centroAContruir < costosFijos.size()) {
                 if (centro.reduccionMinima >= costosFijos.get(centro.centroAContruir)) { // Primer poda. Si la reducción minima es mayor al costo fijo del centro se decide construir sin comparación.
                     List<Integer> x1 = new ArrayList<>(centro.x);
