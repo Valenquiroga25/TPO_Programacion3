@@ -10,8 +10,8 @@ public class CO implements Comparable<CO> {
     List<Integer> costoMinimosPosibles; //Lista con los costos minimos de centros construidos y eventuales. (Lista para calcular c)
     int u; //suma de los costos mínimos de los COs construidos + costos hijos de los COs construidos
     int c; //suma de los costos mínimos de los COs construidos y eventuales + costos hijos de los COs construidos
-    int reduccionMinima;
-    int reduccionMaxima;
+    int reduccionMinima; // Ahorro minimo para cada cliente si se construye el centro.
+    int reduccionMaxima; // Ahorro máximo para cada cliente si se construye el centro.
     int centroAContruir;
     int filas;
     int columnas;
